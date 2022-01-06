@@ -7,6 +7,22 @@ const Puskesmastemplate_path = __dirname + "/Puskesmas.xlsx";
 const metadata_path = __dirname + "/metadata.xlsx";
 const data = xlsx.parse(metadata_path);
 
+//modul mongodb utk koneksi mongo db database
+const url = 'mongodb://127.0.0.1:27017/bps';
+const mongoose = require('mongoose');
+
+mongoose.connect(url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }, (err) => {
+
+  })
+
+const DesKelKCDA = require('./models/DesaKelKCDA.model');
+
+DesKelKCDA.find({}, (e,r)=>{
+    console.log(r);
+})
 
 //##### Blanko Desa Kelurahan
 //get template

@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "lodash": "^4.17.20",
+    "mongoose": "^6.1.5",
     "node-xlsx": "^0.16.1",
     "xlsx-populate": "^1.21.0"
   }
