@@ -2,8 +2,9 @@
 const xlsx = require("node-xlsx").default;
 const fs = require("fs");
 const XlsxPopulate = require('xlsx-populate');
-const DesKectemplate_path = __dirname + "/DesaKel-Kec.xlsx";
+const DesKectemplate_path = __dirname + "/DesaKel only.xlsx";
 const Puskesmastemplate_path = __dirname + "/Puskesmas.xlsx";
+const isWithKec = false;
 const metadata_path = __dirname + "/metadata.xlsx";
 const data = xlsx.parse(metadata_path);
 
@@ -33,10 +34,10 @@ const generateDesaKecBlanko = function (all_tabels, all_kecs) {
                             //set data
                             //nama desa/kel
                             workbook.sheet(0).cell("B2").value(row[1]);
-                            workbook.sheet(1).cell("A2").value(`Kec: ${row[0]}`);
+                            isWithKec?workbook.sheet(1).cell("A2").value(`Kec: ${row[0]}`):null;
                             //nama pic
                             workbook.sheet(0).cell("C2").value(`Kontak BPS: ${row[2]}`);
-                            workbook.sheet(1).cell("C2").value(`Kontak BPS: ${row[2]}`);
+                            isWithKec?workbook.sheet(1).cell("C2").value(`Kontak BPS: ${row[2]}`):null;
                             //desa
                             if (deskel.data[0]) {
                                 const data2020 = [];
@@ -52,7 +53,7 @@ const generateDesaKecBlanko = function (all_tabels, all_kecs) {
                                     kec.data.forEach((val, i) => {
                                         if (i > 2) datakec2020.push([val.k1])
                                     })
-                                    workbook.sheet(1).range("E5:E9").value(datakec2020);
+                                    isWithKec?workbook.sheet(1).range("E5:E9").value(datakec2020):null;
                                 }
                             })
                             //save to ssd
