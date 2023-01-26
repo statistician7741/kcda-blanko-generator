@@ -2,10 +2,10 @@
 const xlsx = require("node-xlsx").default;
 const fs = require("fs");
 const XlsxPopulate = require('xlsx-populate');
-const DesKectemplate_path = __dirname + "/DesaKel only.xlsx";
-const Puskesmastemplate_path = __dirname + "/Puskesmas.xlsx";
+const DesKectemplate_path = __dirname + "/template/2023/DesaKel only.xlsx";
+const Puskesmastemplate_path = __dirname + "/template/2023/Puskesmas.xlsx";
 const isWithKec = false;
-const metadata_path = __dirname + "/metadata.xlsx";
+const metadata_path = __dirname + "/template/2023/metadata.xlsx";
 const data = xlsx.parse(metadata_path);
 
 //modul mongodb utk koneksi mongo db database
