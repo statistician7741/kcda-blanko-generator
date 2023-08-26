@@ -2,9 +2,9 @@
 const xlsx = require("node-xlsx").default;
 const fs = require("fs");
 const XlsxPopulate = require('xlsx-populate');
-const DesKectemplate_path = __dirname + "/template/2023/DesaKel only.xlsx";
 const Puskesmastemplate_path = __dirname + "/template/2023/Puskesmas.xlsx";
-const isWithKec = false;
+const isKec = false;
+const DesKectemplate_path = __dirname + (isKec?"/template/2023/Kec only.xlsx":"/template/2023/DesaKel only.xlsx");
 const metadata_path = __dirname + "/template/2023/metadata.xlsx";
 const data = xlsx.parse(metadata_path);
 
@@ -33,31 +33,29 @@ const generateDesaKecBlanko = function (all_tabels, all_kecs) {
                         .then(workbook => {
                             //set data
                             //nama desa/kel
-                            workbook.sheet(0).cell("B2").value(row[1]);
-                            isWithKec?workbook.sheet(1).cell("A2").value(`Kec: ${row[0]}`):null;
+                            isKec?workbook.sheet(0).cell("A2").value(`Kec: ${row[0]}`):workbook.sheet(0).cell("B2").value(row[1]);
                             //nama pic
-                            workbook.sheet(0).cell("C2").value(`Kontak BPS: ${row[2]}`);
-                            isWithKec?workbook.sheet(1).cell("C2").value(`Kontak BPS: ${row[2]}`):null;
+                            isKec?workbook.sheet(0).cell("C2").value(`Kontak BPS: ${row[2]}`):workbook.sheet(0).cell("C2").value(`Kontak BPS: ${row[2]}`);
                             //desa
-                            if (deskel.data[0]) {
-                                const data2020 = [];
+                            if (deskel.data[0] && !isKec) {
+                                const data2021 = [];
                                 deskel.data.forEach((val, i) => {
-                                    if (i < 5 || i > 28 || (i > 8 && i < 21)) data2020.push([val.isi])
+                                    if (i <= 20 || (i >= 26 && i <= 31) || ( i >= 37 && i <= 81) || ( i >= 83 && i <= 95)) data2021.push([val.isi2021])
                                 })
-                                workbook.sheet(0).range("F5:F113").value(data2020);
+                                workbook.sheet(0).range("F5:F89").value(data2021);
                             }
                             //kec
                             all_kecs.forEach((kec, i) => {
                                 if (kec._id === row[9]) {
-                                    const datakec2020 = []
+                                    const datakec2021 = []
                                     kec.data.forEach((val, i) => {
-                                        if (i > 2) datakec2020.push([val.k1])
+                                        datakec2021.push([val.k2021])
                                     })
-                                    isWithKec?workbook.sheet(1).range("E5:E9").value(datakec2020):null;
+                                    isKec?workbook.sheet(0).range("E5:E10").value(datakec2021):null;
                                 }
                             })
                             //save to ssd
-                            const fileNamePath = __dirname + `/${row[0]}/${row[1]}.xlsx`
+                            const fileNamePath = __dirname + `/${row[0]}/${isKec?'Kec. '+row[0]:row[1]}.xlsx`
                             if (fs.existsSync(fileNamePath)) {
                                 fs.unlinkSync(fileNamePath);
                             }
@@ -143,4 +141,4 @@ DesKelKCDA.find({}, (e, all_tabels) => {
         generateDesaKecBlanko(all_tabels, all_kecs)
     })
 })
-generatePuskesmasBlanko()
+isKec&&generatePuskesmasBlanko()
