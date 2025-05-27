@@ -2,10 +2,10 @@
 const xlsx = require("node-xlsx").default;
 const fs = require("fs");
 const XlsxPopulate = require('xlsx-populate');
-const Puskesmastemplate_path = __dirname + "/template/2023/Puskesmas.xlsx";
+const Puskesmastemplate_path = __dirname + "/template/2024/Puskesmas.xlsx";
 const isKec = false;
-const DesKectemplate_path = __dirname + (isKec?"/template/2023/Kec only.xlsx":"/template/2023/DesaKel only.xlsx");
-const metadata_path = __dirname + "/template/2023/metadata.xlsx";
+const DesKectemplate_path = __dirname + (isKec ? "/template/2024/Kec only.xlsx" : "/template/2024/DesaKel only.xlsx");
+const metadata_path = __dirname + "/template/2024/metadata.xlsx";
 const data = xlsx.parse(metadata_path);
 
 //modul mongodb utk koneksi mongo db database
@@ -33,25 +33,26 @@ const generateDesaKecBlanko = function (all_tabels, all_kecs) {
                         .then(workbook => {
                             //set data
                             //nama desa/kel
-                            isKec?workbook.sheet(0).cell("A2").value(`Kec: ${row[0]}`):workbook.sheet(0).cell("B2").value(row[1]);
+                            isKec ? workbook.sheet(0).cell("A2").value(`Kec: ${row[0]}`) : workbook.sheet(0).cell("B2").value(row[1]);
                             //nama pic
-                            isKec?workbook.sheet(0).cell("C2").value(`Kontak BPS: ${row[2]}`):workbook.sheet(0).cell("C2").value(`Kontak BPS: ${row[2]}`);
+                            isKec ? workbook.sheet(0).cell("C2").value(`Kontak BPS: ${row[2]}`) : workbook.sheet(0).cell("C2").value(`Kontak BPS: ${row[2]}`);
                             //desa
                             if (deskel.data[0] && !isKec) {
-                                const data2021 = [];
+                                const data2022 = [];
                                 deskel.data.forEach((val, i) => {
-                                    if (i <= 20 || (i >= 26 && i <= 31) || ( i >= 37 && i <= 81) || ( i >= 83 && i <= 95)) data2021.push([val.isi2021])
+                                    // if (i <= 20 || (i >= 26 && i <= 31) || ( i >= 37 && i <= 81) || ( i >= 83 && i <= 95)) data2022.push([val.isi2022])
+                                    data2022.push([val.isi2022])
                                 })
-                                workbook.sheet(0).range("F5:F89").value(data2021);
+                                workbook.sheet(0).range("F5:F89").value(data2022);
                             }
                             //kec
                             all_kecs.forEach((kec, i) => {
                                 if (kec._id === row[9]) {
-                                    const datakec2021 = []
+                                    const datakec2022 = []
                                     kec.data.forEach((val, i) => {
-                                        datakec2021.push([val.k2021])
+                                        datakec2022.push([val.k2022])
                                     })
-                                    isKec?workbook.sheet(0).range("E5:E10").value(datakec2021):null;
+                                    isKec ? workbook.sheet(0).range("E5:E10").value(datakec2022) : null;
                                 }
                             })
                             //save to ssd
@@ -141,4 +142,4 @@ DesKelKCDA.find({}, (e, all_tabels) => {
         generateDesaKecBlanko(all_tabels, all_kecs)
     })
 })
-isKec&&generatePuskesmasBlanko()
+isKec && generatePuskesmasBlanko()
