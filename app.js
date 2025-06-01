@@ -8,7 +8,7 @@ const DesKectemplate_path = __dirname + (isKec ? "/template/2025/Kec only.xlsx" 
 const metadata_path = __dirname + "/template/2025/metadata.xlsx";
 const data = xlsx.parse(metadata_path);
 
-//modul mongodb utk koneksi mongo db database
+//modul mongodb utk koneksi mongo db database. ok
 const url = 'mongodb://127.0.0.1:27017/bps';
 const mongoose = require('mongoose');
 
